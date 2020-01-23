@@ -1,9 +1,9 @@
+"git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"git config --global github.user ishutin-pavel
+
 " Задачи:
 " Переключение раскладки на Русскую машинопись <C-^>
 " Показать пробельные символы
-" Создать .vim/ с плагинами и настройками. Залить на github. Для быстрого
-" развёртывания на сервере.
-"
 
 "------------------
 " Конфиг
@@ -21,8 +21,6 @@
 "------------------
 " Vandle Plagin
 "------------------
-    "mkdir ~/.vim/bundle
-    "git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
     set nocompatible              " be iMproved, required
     filetype off                  " required
@@ -211,19 +209,6 @@
     "nnoremap <f2> :mks! session.vim<CR>
     "nnoremap <f3> :source session.vim<CR>
     
-"-------------
-" Аббревиатуры
-"-------------
-
-    iab _me ishutin-pavel@mail.ru
-    iab _c <div class="container"></div><!-- .container -->
-
-"----------------
-" SNIPPETS
-"----------------
-
-    nnoremap <leader>c :-1read $HOME/.vim/.container.html<cr>2jf>a
-
 "----------------
 " РАСКЛАДКА
 "----------------
