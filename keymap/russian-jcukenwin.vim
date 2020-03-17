@@ -1,0 +1,104 @@
+" Раскладка русская машинопись
+
+" Maintainer:   Ishutin Pavel <ishutin-pavel@mail.ru>
+" Last Changed: 2020 Mar 16
+
+scriptencoding utf-8
+
+let b:keymap_name = "ru"
+
+loadkeymap
+` |
+~ + 
+1 №
+2 -
+3 /
+4 "
+5 :
+6 ,
+7 .
+8 _
+9 ?
+0 %
+- !
+= ;
+! 1
+@ 2
+# 3
+$ 4
+% 5
+^ 6
+& 7
+* 8
+( 9
+) 0
+_ =
++ \\
+q й
+w ц
+e у
+r к
+t е
+a ф
+s ы
+d в
+f а
+g п
+z я
+x ч
+c с
+v м
+b и
+y н
+u г
+i ш
+o щ
+p з
+[ х
+] ъ
+h р
+j о
+k л
+l д
+; ж
+' э
+n т
+m ь
+, б
+. ю
+/ ё
+\\ )
+| (
+Q Й
+W Ц
+E У
+R К
+T Е
+A Ф
+S Ы
+D В
+F А
+G П
+Z Я
+X Ч
+C С
+V М
+B И
+Y Н
+U Г
+I Ш
+O Щ
+P З
+{ Х
+} Ъ
+H Р
+J О
+K Л
+L Д
+: Ж
+\" Э
+N Т
+M Ь
+< Б
+> Ю
+? Ё
