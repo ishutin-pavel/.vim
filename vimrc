@@ -47,6 +47,7 @@
     "Подсветка синтаксиса
     Plugin 'lumiliet/vim-twig'
     Plugin 'sickill/vim-monokai'
+    Plugin 'hail2u/vim-css3-syntax'
 
     "Gist Github
     Plugin 'mattn/webapi-vim'
@@ -116,6 +117,12 @@
 
     "Цветовая схема. Устанавливается отдельно
     colorscheme monokai
+
+    "Подсветка CSS3 от плагина hail2u/vim-css3-syntax
+    augroup VimCSS3Syntax
+      autocmd!
+      autocmd FileType css setlocal iskeyword+=-
+    augroup END
 
 "------
 " Поиск
