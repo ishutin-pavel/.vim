@@ -110,7 +110,7 @@
 "------
 
     "Подсветка синтаксиса
-    syntax enable
+    syntax on
 
     "Подсветка текущей строки
     "set cursorline
@@ -172,6 +172,9 @@
     "Определение расширения файла
     set suffixesadd+=.php
 
+    "Перед сохранением вырезаем пробелы на концах
+    autocmd BufWritePre *.html normal :%s/\s\+$//g
+
 "------------
 " Status Line
 "------------
@@ -208,14 +211,24 @@
     
     "Удалить всё
     nnoremap <leader>d :%d<CR>
+
     "Syntax
     nnoremap <leader>h :set syntax=html<CR>
     nnoremap <leader>p :set syntax=php<CR>
     nnoremap <leader>s :set syntax=css<CR>
-    "Session
-    "nnoremap <f2> :mks! session.vim<CR>
-    "nnoremap <f3> :source session.vim<CR>
+
+    "путь к каталогу текущего файла
+    cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
     
+"-------------
+" Аббревиатуры
+"-------------
+
+    iab _me ishutin-pavel@mail.ru
+    iab _c <div class="container"></div><!-- .container -->
+    iab _r <div class="row"></div><!-- .row -->
+    iab _dump !mysqldump -h localhost -u user -pPASS database > ~/backups/domain-ru_$(date +%Y_%m_%d_%H_%M).sql
+
 "----------------
 " РАСКЛАДКА
 "----------------
@@ -228,6 +241,5 @@
 " Ctags
 "------
 
-  "set tags +=../../../tags
-  set tags +=../tags
+  "set tags +=../tags
   nnoremap <f5> :!ctags -R --exclude=node_modules
