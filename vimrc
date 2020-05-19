@@ -219,6 +219,8 @@
 
     "путь к каталогу текущего файла
     cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+    "open link
+    nnoremap <F5> yy:!start <C-r>0<CR>
     
 "-------------
 " Аббревиатуры
@@ -242,4 +244,10 @@
 "------
 
   "set tags +=../tags
-  nnoremap <f5> :!ctags -R --exclude=node_modules
+  nnoremap <f3> :!ctags -R --exclude=node_modules -F **/*.php
+
+"-----------------
+" vim-commentary
+"-----------------
+    " autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
+    autocmd FileType twig setlocal commentstring=<!--\ %s\ -->
