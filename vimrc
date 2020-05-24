@@ -1,23 +1,3 @@
-"git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-"git config --global github.user ishutin-pavel
-
-" Задачи:
-" Переключение раскладки на Русскую машинопись <C-^>
-" Показать пробельные символы
-
-"------------------
-" Конфиг
-"------------------
-
-    "Загрузить произвольный конфиг
-    ":so[urce] {file}
-
-    "Сохранить и применить текущий .vimrc
-    ":w | so %
-
-    "Горячая клавиша '<leader>w' - сохранить и применить
-    nmap <leader>w :w<cr>:so%<cr>
-
 "------------------
 " Vandle Plagin
 "------------------
@@ -112,9 +92,6 @@
     "Подсветка синтаксиса
     syntax on
 
-    "Подсветка текущей строки
-    "set cursorline
-
     "Цветовая схема. Устанавливается отдельно
     colorscheme monokai
 
@@ -131,10 +108,10 @@
     "Подсветка результатов поиска
     set hlsearch
 
-    " Ignore case when searching
+    "Ignore case when searching
     set ignorecase
 
-    " When searching try to be smart about cases 
+    "When searching try to be smart about cases 
     set smartcase
 
     "Искать во всех вложенных каталогах проекта :find
@@ -147,9 +124,6 @@
 "-----------------
 " Другие параметры
 "-----------------
-
-    "Отображаем номера строк
-    "set number
 
     "Показать незавершенные команды
     set showcmd
@@ -184,6 +158,7 @@
 
     set statusline=
     set statusline+=\ %F                                        "полный путь к файлу
+    set statusline +=%=%5l                                      "номер текущей строки
     set statusline+=%m\                                         "модификатор
     set statusline+=%=                                          "разделитель между левой и правой частью
     set statusline+=\ %y                                        "тип файла
@@ -197,11 +172,34 @@
 "------------------
 
     let g:netrw_banner = 0       "Скрыть баннер
-    "let g:netrw_liststyle = 1    "Listing style
 
 "----------------
 " Горячие клавиши
 "----------------
+
+    "Backup Database
+    function Dodump()
+      let l:db_host = "localhost"
+      let l:db_name = "wordpress"
+      let l:db_user = "root"
+      let l:db_pass = ""
+      let l:dump_name = "dump_" . strftime("%Y%m%d_%H%M") . ".sql"
+      if l:db_pass == ""
+        let l:cmd = "!mysqldump -h ". l:db_host ." -u ".l:db_user." " . l:db_name . " > ./" . l:dump_name
+      else
+        let l:cmd = "!mysqldump -h " .l:db_host ." -u ".l:db_user." -p".l:db_pass ." " .  l:db_name . " > ./" . l:dump_name
+      endif
+      execute l:cmd
+    endfunction
+    nnoremap <F12> :call Dodump()<CR>
+
+    "Backup Files
+    function Dobackup()
+      let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
+      let l:cmd = "!tar -cvzf ". l:backup_name ." *"
+      execute l:cmd
+    endfunction
+    nnoremap <F11> :call Dobackup()<CR>
 
     "Переход по окнам ctrl + hjkl
     map <C-k> <C-w><Up>
@@ -209,17 +207,27 @@
     map <C-l> <C-w><Right>
     map <C-h> <C-w><Left>
     
+    "Горячая клавиша <leader>w - сохранить и применить текущий .vimrc
+    "\w
+    nmap <leader>w :w<cr>:so%<cr>
+
     "Удалить всё
+    "\d
     nnoremap <leader>d :%d<CR>
 
-    "Syntax
+    "Изменить подсветку синтаксиса
+    "\h - html
+    "\p - php
+    "\s - css
     nnoremap <leader>h :set syntax=html<CR>
     nnoremap <leader>p :set syntax=php<CR>
     nnoremap <leader>s :set syntax=css<CR>
 
     "путь к каталогу текущего файла
+    ":e %%
     cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-    "open link
+
+    "Открыть строку=ссылку под курсором
     nnoremap <F5> yy:!start <C-r>0<CR>
     
 "-------------
@@ -229,7 +237,6 @@
     iab _me ishutin-pavel@mail.ru
     iab _c <div class="container"></div><!-- .container -->
     iab _r <div class="row"></div><!-- .row -->
-    iab _dump !mysqldump -h localhost -u user -pPASS database > ~/backups/domain-ru_$(date +%Y_%m_%d_%H_%M).sql
 
 "----------------
 " РАСКЛАДКА
@@ -244,7 +251,7 @@
 "------
 
   "set tags +=../tags
-  nnoremap <f3> :!ctags -R --exclude=node_modules -F **/*.php
+  nnoremap <F3> :!ctags -R --exclude=node_modules -F **/*.php
 
 "-----------------
 " vim-commentary
