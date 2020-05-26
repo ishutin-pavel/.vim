@@ -196,7 +196,7 @@
     "Backup Files
     function Dobackup()
       let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-      let l:cmd = "!tar --exclude='node_modules' --exclude='.git' -cvzf ". l:backup_name ." ."
+      let l:cmd = "!tar --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
       execute l:cmd
     endfunction
     nnoremap <F11> :call Dobackup()<CR>
