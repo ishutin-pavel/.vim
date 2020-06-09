@@ -159,7 +159,6 @@
 
     set statusline=
     set statusline+=\ %F                                        "полный путь к файлу
-    set statusline+=\ %v                                         "номер колонки
     set statusline+=%=%5l                                       "номер текущей строки
     set statusline+=%m\                                         "модификатор
     set statusline+=%=                                          "разделитель между левой и правой частью
