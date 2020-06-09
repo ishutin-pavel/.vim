@@ -28,6 +28,7 @@
     Plugin 'lumiliet/vim-twig'
     Plugin 'sickill/vim-monokai'
     Plugin 'hail2u/vim-css3-syntax'
+    Plugin 'MaxMEllon/vim-jsx-pretty'
 
     "Gist Github
     Plugin 'mattn/webapi-vim'
@@ -158,14 +159,15 @@
 
     set statusline=
     set statusline+=\ %F                                        "полный путь к файлу
-    set statusline +=%=%5l                                      "номер текущей строки
+    set statusline+=\ %v                                         "номер колонки
+    set statusline+=%=%5l                                       "номер текущей строки
     set statusline+=%m\                                         "модификатор
     set statusline+=%=                                          "разделитель между левой и правой частью
     set statusline+=\ %y                                        "тип файла
     set statusline+=\ %{&fileencoding?&fileencoding:&encoding}  "кодировка
     set statusline+=\ [%{&fileformat}\]                         "формат end-of-line
-    set statusline +=%=%5l                                      "номер текущей строки
-    set statusline +=/%L\                                       "всего строк
+    set statusline+=%=%5l                                       "номер текущей строки
+    set statusline+=/%L\                                        "всего строк
 
 "------------------
 " Файловый менеджер
@@ -196,7 +198,7 @@
     "Backup Files
     function Dobackup()
       let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-      let l:cmd = "!tar --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
+      let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
       execute l:cmd
     endfunction
     nnoremap <F11> :call Dobackup()<CR>
@@ -237,6 +239,7 @@
     iab _me ishutin-pavel@mail.ru
     iab _c <div class="container"></div><!-- .container -->
     iab _r <div class="row"></div><!-- .row -->
+    iab _col <div class="col-sm-6"></div><!-- .col -->
 
 "----------------
 " РАСКЛАДКА
@@ -257,4 +260,4 @@
 " vim-commentary
 "-----------------
     " autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
-    autocmd FileType twig setlocal commentstring=<!--\ %s\ -->
+    autocmd FileType twig setlocal commentstring={#\ %s\ #}
