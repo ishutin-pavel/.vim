@@ -192,15 +192,15 @@
       endif
       execute l:cmd
     endfunction
-    nnoremap <F12> :call Dodump()<CR>
+    nnoremap <F11> :call Dodump()<CR>
 
     "Backup Files
     function Dobackup()
       let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-      let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
+      let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='tags' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
       execute l:cmd
     endfunction
-    nnoremap <F11> :call Dobackup()<CR>
+    nnoremap <F12> :call Dobackup()<CR>
 
     "Переход по окнам ctrl + hjkl
     map <C-k> <C-w><Up>
@@ -215,6 +215,11 @@
     "Удалить всё
     "\d
     nnoremap <leader>d :%d<CR>
+
+    "Сохранить и удалить буфер
+    "\d
+    nnoremap <leader>x :w<cr>:bd<cr>
+
 
     "Изменить подсветку синтаксиса
     "\h - html
@@ -258,5 +263,5 @@
 "-----------------
 " vim-commentary
 "-----------------
-    " autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
+    autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
     autocmd FileType twig setlocal commentstring={#\ %s\ #}
