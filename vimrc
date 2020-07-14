@@ -265,3 +265,4 @@
 "-----------------
     autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
     autocmd FileType twig setlocal commentstring={#\ %s\ #}
+    autocmd FileType smarty setlocal commentstring=<!--\ %s\ -->
