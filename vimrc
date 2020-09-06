@@ -217,7 +217,7 @@
     nnoremap <leader>d :%d<CR>
 
     "Сохранить и удалить буфер
-    "\d
+    "\x
     nnoremap <leader>x :w<cr>:bd<cr>
 
 
@@ -234,7 +234,7 @@
     cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
     "Открыть строку=ссылку под курсором
-    nnoremap <F5> yy:!start <C-r>0<CR>
+    nnoremap <leader>l y$:!start <C-r>0<CR>
     
 "-------------
 " Аббревиатуры
