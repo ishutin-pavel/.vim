@@ -203,7 +203,7 @@
     "Backup Files
     function Dobackup()
       let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-      let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='tags' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
+      let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
       execute l:cmd
     endfunction
     nnoremap <F12> :call Dobackup()<CR>
@@ -240,7 +240,7 @@
     cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 
     "Открыть строку=ссылку под курсором
-    nnoremap <leader>l y$:!start <C-r>0<CR>
+    nnoremap <leader>l yiW:!start <C-r>0<CR>
     
 "-------------
 " Аббревиатуры
