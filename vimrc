@@ -24,6 +24,9 @@
     "Комментарии
     Plugin 'tpope/vim-commentary'
 
+    "CSV
+    "Plugin 'chrisbra/csv.vim'
+
     "Подсветка синтаксиса
     Plugin 'lumiliet/vim-twig'
     Plugin 'sickill/vim-monokai'
@@ -184,23 +187,53 @@
 " Горячие клавиши
 "----------------
 
-    "Backup Database
+    "F11 - Backup Database
     function Dodump()
-      let l:db_host = "localhost"
-      let l:db_name = "wordpress"
-      let l:db_user = "root"
-      let l:db_pass = ""
+      " let l:db_host = "localhost"
+      " let l:db_name = "wordpress"
+      " let l:db_user = "root"
+      " let l:db_pass = ""
       let l:dump_name = "dump_" . strftime("%Y%m%d_%H%M") . ".sql"
+      
+      let l:lines = readfile('wp-config.php')
+      for l:line in l:lines
+        if (l:line =~ "define( 'DB_NAME', '")
+          let ipa = l:line
+          let ips = substitute(ipa, "define( 'DB_NAME', '", "", "g")
+          let ipe = substitute(ips, "' );", "", "g")
+          let l:db_name = ipe
+        endif
+        if (l:line =~ "define( 'DB_USER', '")
+          let ipa = l:line
+          let ips = substitute(ipa, "define( 'DB_USER', '", "", "g")
+          let ipe = substitute(ips, "' );", "", "g")
+          let l:db_user = ipe
+        endif
+        if (l:line =~ "define( 'DB_PASSWORD', '")
+          let ipa = l:line
+          let ips = substitute(ipa, "define( 'DB_PASSWORD', '", "", "g")
+          let ipe = substitute(ips, "' );", "", "g")
+          let l:db_pass = ipe
+        endif
+        if (l:line =~ "define( 'DB_HOST', '")
+          let ipa = l:line
+          let ips = substitute(ipa, "define( 'DB_HOST', '", "", "g")
+          let ipe = substitute(ips, "' );", "", "g")
+          let l:db_host = ipe
+        endif
+      endfor
+
       if l:db_pass == ""
         let l:cmd = "!mysqldump -h ". l:db_host ." -u ".l:db_user." " . l:db_name . " > ./" . l:dump_name
       else
         let l:cmd = "!mysqldump -h " .l:db_host ." -u ".l:db_user." -p".l:db_pass ." " .  l:db_name . " > ./" . l:dump_name
       endif
+      execute echo l:db_name
       execute l:cmd
     endfunction
     nnoremap <F11> :call Dodump()<CR>
 
-    "Backup Files
+    "F12 - Backup Files
     function Dobackup()
       let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
       let l:cmd = "!tar --exclude='documentation' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
@@ -218,9 +251,16 @@
     "\w
     nmap <leader>w :w<cr>:so%<cr>
 
+    "Выровнять
+    nmap <leader>r :normal =ap<cr>
+    nmap <leader>t :normal =at<cr>
+
     "Удалить всё
     "\d
     nnoremap <leader>d :%d<CR>
+
+    "Класс
+    nnoremap <leader>c :normal I.<esc>A {<cr>}<esc>
 
     "Сохранить и удалить буфер
     "\x
@@ -241,6 +281,12 @@
 
     "Открыть строку=ссылку под курсором
     nnoremap <leader>l yiW:!start <C-r>0<CR>
+
+    "Открыть файл в браузере
+    nnoremap <leader>o :!start <C-r>%<CR>
+
+    "console.log();
+    nnoremap <leader>c :normal iconsole.log(<esc>A);<esc>
     
 "-------------
 " Аббревиатуры
