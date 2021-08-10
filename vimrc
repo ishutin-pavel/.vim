@@ -125,7 +125,7 @@
     set smartcase
 
     "Искать во всех вложенных каталогах проекта :find
-    set path+=**
+    set path+=.,**,,
 
     "Меню выбора файла Next: <C-n> Previous: <C-p>
     set wildmenu
@@ -153,8 +153,12 @@
     "Не обновлять экран пока выполняется макрос
     set lazyredraw
 
-    "Определение расширения файла
+    "Определение расширения файла для команды gf
     set suffixesadd+=.php
+    set suffixesadd+=.js
+    set suffixesadd+=.css
+    set suffixesadd+=.scss
+    set suffixesadd+=.md
 
     "Перед сохранением вырезаем пробелы на концах
     autocmd BufWritePre *.html normal :%s/\s\+$//g
@@ -247,9 +251,9 @@
     map <C-l> <C-w><Right>
     map <C-h> <C-w><Left>
     
-    "Горячая клавиша <leader>w - сохранить и применить текущий .vimrc
+    "Сохранить всё
     "\w
-    nmap <leader>w :w<cr>:so%<cr>
+    nmap <leader>w :wall<cr>
 
     "Выровнять
     nmap <leader>r :normal =ap<cr>
@@ -270,9 +274,11 @@
     "Изменить подсветку синтаксиса
     "\h - html
     "\p - php
+    "\t - twig
     "\s - css
     nnoremap <leader>h :set syntax=html<CR>
     nnoremap <leader>p :set syntax=php<CR>
+    nnoremap <leader>t :set filetype=twig<CR>
     nnoremap <leader>s :set syntax=css<CR>
 
     "путь к каталогу текущего файла
@@ -285,9 +291,9 @@
     "Открыть файл в браузере
     nnoremap <leader>o :!start <C-r>%<CR>
 
-    "console.log();
-    nnoremap <leader>c :normal iconsole.log(<esc>A);<esc>
-    
+    "\n - создать и сохранить имя заметки в регистре n
+    nnoremap <leader>n :source template.vim<CR>
+      
 "-------------
 " Аббревиатуры
 "-------------
@@ -311,10 +317,35 @@
 
   "set tags +=../tags
   nnoremap <F3> :!ctags -R --exclude=node_modules -F **/*.php
+  nnoremap <F4> :!ctags -R<CR>
 
 "-----------------
 " vim-commentary
 "-----------------
-    autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
+    " autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
+    autocmd FileType php setlocal commentstring=/*\ %s\ */
     autocmd FileType twig setlocal commentstring={#\ %s\ #}
     autocmd FileType smarty setlocal commentstring=<!--\ %s\ -->
+
+"-----------------
+" Подсветка
+"-----------------
+
+  "MarkDown
+  hi markdownH1 ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH2 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH3 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH4 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH5 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH6 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownHeadingDelimiter ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownUrlDelimiter ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  "Ссылки в markdown
+  " hi markdownIpLnk ctermfg=250 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  " match markdownIpLnk "\[\[\zs[0-9]\{12,14\}\ze\]\]"
+
+  "Подсветка колонки
+  highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
+  " match zettelIndex /\%<41v.\%>40v/
+  nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
+  nnoremap <leader><F6> :match zettelIndex //<CR>
