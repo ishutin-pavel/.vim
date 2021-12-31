@@ -202,7 +202,7 @@
       " let l:db_name = "wordpress"
       " let l:db_user = "root"
       " let l:db_pass = ""
-      let l:dump_name = "dump_" . strftime("%Y%m%d_%H%M") . ".sql"
+      let l:dump_name = "backup_" . strftime("%Y%m%d_%H%M") . ".sql"
       
       let l:lines = readfile('wp-config.php')
       for l:line in l:lines
@@ -357,3 +357,22 @@
   " match zettelIndex /\%<41v.\%>40v/
   nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
   nnoremap <leader><F6> :match zettelIndex //<CR>
+  "Yandex Direct Title
+  nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
+  "Yandex Direct Subtitle
+  nnoremap <leader>yds :match zettelIndex /\%<30v.\%>29v/<CR>
+  "Yandex Direct Description
+  nnoremap <leader>ydd :match zettelIndex /\%<81v.\%>80v/<CR>
+
+
+
+  "Поиск выделения
+  xnoremap * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
+  xnoremap # :<C-u>call <SID>VSetSearch()<CR>?<C-R>=@/<CR><CR>
+
+  function! s:VSetSearch()
+    let temp = @s
+    norm! gv"sy
+    let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
+    let @s = temp
+  endfunction
