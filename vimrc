@@ -266,7 +266,12 @@
 
     "Удалить всё
     "\d
-    nnoremap <leader>d :%d<CR>
+    nnoremap <leader>dd :%d<CR>
+    "Удалить стили
+    "delete style=""
+    nnoremap <leader>ds :%s/\s*style="[a-zA-Z-: 0-9.;#%',]*"//g<CR>
+    "delete class=""
+    nnoremap <leader>dc :%s/\s*class="[a-zA-Z-_ 0-9]*"//g<CR>
 
     "Класс
     nnoremap <leader>c :normal I.<esc>A {<cr>}<esc>
@@ -274,6 +279,7 @@
     "Сохранить и удалить буфер
     "\x
     nnoremap <leader>x :w<cr>:bd<cr>
+
 
 
     "Изменить подсветку синтаксиса
