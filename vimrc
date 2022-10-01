@@ -84,7 +84,7 @@
   set spelllang=ru
 
   "в этот файл записываем слова не
-  set spellfile=termins.utf-8.add
+  set spellfile=~/.vim/spell/ru.utf-8.add
 
 "-----
 " Табы
@@ -314,9 +314,9 @@
   "\S - HTML to CSS
   nnoremap <leader>S :source ~/.vim/html-to-css.vim<CR>
 
-"-------------
-" Аббревиатуры
-"-------------
+"-------------------------
+" Аббревиатуры для примера
+"-------------------------
 
   iab _me ishutin-pavel@mail.ru
   iab _c <div class="container"></div><!-- .container -->
@@ -353,6 +353,7 @@
 "-----------------
 
   "MarkDown
+  "Коды цветов
   "http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
   hi markdownH1 ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownH2 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
@@ -368,17 +369,23 @@
 
   "Подсветка колонки
   highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
-  " match zettelIndex /\%<41v.\%>40v/
+  "Выделить 41 столбец символ в строке
   nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
   nnoremap <leader><F6> :match zettelIndex //<CR>
   "Yandex Direct Title
-  nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
+  "nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
   "Yandex Direct Subtitle
-  nnoremap <leader>yds :match zettelIndex /\%<30v.\%>29v/<CR>
+  "nnoremap <leader>yds :match zettelIndex /\%<30v.\%>29v/<CR>
   "Yandex Direct Description
-  nnoremap <leader>ydd :match zettelIndex /\%<81v.\%>80v/<CR>
+  "nnoremap <leader>ydd :match zettelIndex /\%<81v.\%>80v/<CR>
 
-
+  "\zf - Zettel Find найти слово под курсором во всех файлах для проекта zettelcasten
+  "Сохраняем слово в регистр f
+  "Создаём и открываем буфер search.md
+  ":r !grep -r --include=*.md --exclude-from=tags --exclude-dir=.git 'продаж' .
+  nnoremap <leader>zh1 I# <ESC> 
+  nnoremap <leader>zh2 I## <ESC> 
+  nnoremap <leader>zh3 I### <ESC> 
 
   "Поиск выделения
   xnoremap * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
@@ -390,3 +397,7 @@
     let @/ = '\V' . substitute(escape(@s, '/\'), '\n', '\\n', 'g')
     let @s = temp
   endfunction
+
+  "Поменять местами столбцы в csv файле
+  "\v^([^,]*),([^,]*)
+  "%s//\2,\1/g
