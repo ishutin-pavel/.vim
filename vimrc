@@ -352,6 +352,10 @@
 " Подсветка
 "-----------------
 
+  "Выделяем нужное. Использование:
+  ":match accent /поисковый шаблон/
+  hi accent ctermfg=195 ctermbg=243 cterm=NONE guifg=NONE guibg=NONE gui=NONE
+
   "MarkDown
   "Коды цветов
   "http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
@@ -363,9 +367,10 @@
   hi markdownH6 ctermfg=99 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownHeadingDelimiter ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownUrlDelimiter ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+
   "Ссылки в markdown
-  " hi markdownIpLnk ctermfg=250 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  " match markdownIpLnk "\[\[\zs[0-9]\{12,14\}\ze\]\]"
+  hi markdownLink ctermfg=218 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  syn match markdownLink "\[\[[0-9]\{14}\]\]"
 
   "Подсветка колонки
   highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
@@ -386,6 +391,10 @@
   nnoremap <leader>zh1 I# <ESC> 
   nnoremap <leader>zh2 I## <ESC> 
   nnoremap <leader>zh3 I### <ESC> 
+  nnoremap <leader>zh4 I#### <ESC> 
+  nnoremap <leader>zh5 I##### <ESC> 
+  nnoremap <leader>zh6 I###### <ESC> 
+  nnoremap <leader>gf /[0-9]\{14}<CR>:normal gf<CR><CR>:noh<CR>
 
   "Поиск выделения
   xnoremap * :<C-u>call <SID>VSetSearch()<CR>/<C-R>=@/<CR><CR>
@@ -404,3 +413,4 @@
   
   "todo - что нужно сделать
   "В файлах .md выделяется красным знак подчёркивания _ - нужно исправить
+  "Исправил
