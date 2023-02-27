@@ -257,46 +257,22 @@
   map <C-l> <C-w><Right>
   map <C-h> <C-w><Left>
 
-  "Сохранить всё
-  "\w
-  nmap <leader>w :wall<cr>
-
   "Выровнять
-  nmap <leader>r :normal =ap<cr>
-  nmap <leader>t :normal =at<cr>
+  nmap <leader>r :normal =at<cr>
 
   "Удалить всё
   "\d
   nnoremap <leader>dd :%d<CR>
-  "Удалить стили
-  "delete style=""
+
+  "Удалить атрибут style=""
   nnoremap <leader>ds :%s/\s*style="[a-zA-Z-: 0-9.;#%',]*"//g<CR>
-  "delete class=""
+
+  "Удалить атрибут class=""
   nnoremap <leader>dc :%s/\s*class="[a-zA-Z-_ 0-9]*"//g<CR>
-
-  "Add Class - Преобразовать слово header в .header {}
-  nnoremap <leader>ac :normal I.<esc>A {<cr>}<esc>O
-
-  "Найти и заменить " на ' - Replace  
-  " не получилось
-  "nnoremap <leader>r" :'<,'>s/"/'/g<CR>
-
 
   "Сохранить и удалить буфер
   "\x
   nnoremap <leader>x :w<cr>:bd<cr>
-
-
-
-  "Изменить подсветку синтаксиса
-  "\h - html
-  "\p - php
-  "\t - twig
-  "\s - css
-  nnoremap <leader>sh :set syntax=html<CR>
-  nnoremap <leader>sp :set syntax=php<CR>
-  nnoremap <leader>st :set filetype=twig<CR>
-  nnoremap <leader>sc :set syntax=css<CR>
 
   "путь к каталогу текущего файла
   ":e %%
@@ -311,8 +287,24 @@
   "\n - создать и сохранить имя заметки в регистре n
   nnoremap <leader>n :source template.vim<CR>
 
+  " Создание оглавления
+  nnoremap <F5> :source generateAutoIndex.vim<CR>
+
   "\S - HTML to CSS
   nnoremap <leader>S :source ~/.vim/html-to-css.vim<CR>
+
+"----------------
+" Синтаксис
+"----------------
+  "Изменить подсветку синтаксиса
+  "\h - html
+  "\p - php
+  "\t - twig
+  "\s - css
+  nnoremap <leader>sh :set syntax=html<CR>
+  nnoremap <leader>sp :set syntax=php<CR>
+  nnoremap <leader>st :set filetype=twig<CR>
+  nnoremap <leader>sc :set syntax=css<CR>
 
 "-------------------------
 " Аббревиатуры для примера
@@ -338,7 +330,6 @@
   "set tags +=../tags
   nnoremap <F3> :!ctags -R --exclude=node_modules -F **/*.php
   nnoremap <F4> :!ctags -R<CR>
-  nnoremap <F5> :%substitute/\s*$//g<CR>
 
 "-----------------
 " vim-commentary
