@@ -151,6 +151,10 @@
   let &t_EI.="\e[1 q"
   let &t_te.="\e[0 q"
 
+  "Подсветка строки
+  "set cursorline
+  "set cursorcolumn
+
   "Не обновлять экран пока выполняется макрос
   set lazyredraw
 
@@ -310,10 +314,10 @@
 " Аббревиатуры для примера
 "-------------------------
 
-  iab _me ishutin-pavel@mail.ru
-  iab _c <div class="container"></div><!-- .container -->
-  iab _r <div class="row"></div><!-- .row -->
-  iab _col <div class="col-sm-6"></div><!-- .col -->
+  " iab _me ishutin-pavel@mail.ru
+  " iab _c <div class="container"></div><!-- .container -->
+  " iab _r <div class="row"></div><!-- .row -->
+  " iab _col <div class="col-sm-6"></div><!-- .col -->
 
 "----------------
 " РАСКЛАДКА
@@ -361,7 +365,7 @@
 
   "Ссылки в markdown
   hi markdownLink ctermfg=218 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  syn match markdownLink "\[\[[0-9]\{14}\]\]"
+  match markdownLink "\[\[[0-9]\{14}\]\]"
 
   "Подсветка колонки
   highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
@@ -401,6 +405,9 @@
   "Поменять местами столбцы в csv файле
   "\v^([^,]*),([^,]*)
   "%s//\2,\1/g
+
+  "Разбиение строки
+  "g/\%>60v/norm gww
   
   "todo - что нужно сделать
   "В файлах .md выделяется красным знак подчёркивания _ - нужно исправить
