@@ -363,10 +363,6 @@
   hi markdownHeadingDelimiter ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownUrlDelimiter ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
 
-  "Ссылки в markdown
-  hi markdownLink ctermfg=218 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  match markdownLink "\[\[[0-9]\{14}\]\]"
-
   "Подсветка колонки
   highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
   "Выделить 41 столбец символ в строке
@@ -412,3 +408,7 @@
   "todo - что нужно сделать
   "В файлах .md выделяется красным знак подчёркивания _ - нужно исправить
   "Исправил
+  "
+  "
+  let g:github_user = "ishutin-pavel"
+  let g:gist_token = "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"
