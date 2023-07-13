@@ -412,3 +412,11 @@
   "
   let g:github_user = "ishutin-pavel"
   let g:gist_token = "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"
+
+  "Tidy html
+  "https://tidy.sourceforge.net/
+  "Download
+  "http://binaries.html-tidy.org/
+  "Documentation
+  "http://api.html-tidy.org/tidy/quickref_5.0.0.html
+  vmap ,x :!tidy -q -i --show-errors 0<CR>
