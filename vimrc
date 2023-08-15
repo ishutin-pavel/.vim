@@ -58,9 +58,9 @@
 " Автосохранение
 "------------------
 
-  set nobackup
-  set nowb
-  set noswapfile
+  " set nobackup
+  " set nowb
+  " set noswapfile
 
 "----------
 " Кодировка
@@ -260,6 +260,9 @@
   map <C-j> <C-w><Down>
   map <C-l> <C-w><Right>
   map <C-h> <C-w><Left>
+
+  " Назначаем клавишу лидер на запятую
+  " let mapleader = ","
 
   "Выровнять
   "nmap <leader>r :normal =at<cr>
