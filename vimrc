@@ -262,7 +262,9 @@
   map <C-h> <C-w><Left>
 
   "Выровнять
-  nmap <leader>r :normal =at<cr>
+  "nmap <leader>r :normal =at<cr>
+  "Выровнять html - Tidy html
+  vmap <leader>r :!tidy -q -i --wrap 0 --show-errors 0<CR>
 
   "Удалить всё
   "\d
@@ -363,6 +365,11 @@
   hi markdownHeadingDelimiter ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownUrlDelimiter ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
 
+  "Размечать файл для свёрток
+  let g:markdown_folding = 1
+  "Открывать файл НЕ свёрнутым
+  set nofoldenable
+
   "Подсветка колонки
   highlight zettelIndex ctermfg=235 ctermbg=231 cterm=NONE guifg=#272822 guibg=#f8f8f0 gui=NONE
   "Выделить 41 столбец символ в строке
@@ -412,11 +419,3 @@
   "
   let g:github_user = "ishutin-pavel"
   let g:gist_token = "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"
-
-  "Tidy html
-  "https://tidy.sourceforge.net/
-  "Download
-  "http://binaries.html-tidy.org/
-  "Documentation
-  "http://api.html-tidy.org/tidy/quickref_5.0.0.html
-  vmap ,x :!tidy -q -i --show-errors 0<CR>
