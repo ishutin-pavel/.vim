@@ -27,15 +27,18 @@
   "CSV
   "Plugin 'chrisbra/csv.vim'
 
+  "Выравнивание кода
+  "Plugin 'prettier/vim-prettier'
+
   "Подсветка синтаксиса
-  Plugin 'lumiliet/vim-twig'
-  Plugin 'sickill/vim-monokai'
-  Plugin 'hail2u/vim-css3-syntax'
-  Plugin 'MaxMEllon/vim-jsx-pretty'
+  "Plugin 'lumiliet/vim-twig'
+  "Plugin 'sickill/vim-monokai'
+  "Plugin 'hail2u/vim-css3-syntax'
+  " Plugin 'MaxMEllon/vim-jsx-pretty'
 
   "Gist Github
-  Plugin 'mattn/webapi-vim'
-  Plugin 'mattn/gist-vim'
+  "Plugin 'mattn/webapi-vim'
+  "Plugin 'mattn/gist-vim'
 
   " All of your Plugins must be added before the following line
   call vundle#end()            " required
@@ -54,13 +57,13 @@
 
   filetype plugin on
 
-"------------------
-" Автосохранение
-"------------------
+"-------------------------
+" Автосохранение отключить
+"-------------------------
 
-  " set nobackup
-  " set nowb
-  " set noswapfile
+  set nobackup
+  set nowb
+  set noswapfile
 
 "----------
 " Кодировка
@@ -250,7 +253,7 @@
   "F12 - Backup Files
   function Dobackup()
     let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ."
+    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ./"
     execute l:cmd
   endfunction
   nnoremap <F12> :call Dobackup()<CR>
@@ -267,7 +270,8 @@
   "Выровнять
   "nmap <leader>r :normal =at<cr>
   "Выровнять html - Tidy html
-  vmap <leader>r :!tidy -q -i --wrap 0 --show-errors 0<CR>
+  "vmap <leader>r :!tidy -q -i --wrap 0 --show-errors 0<CR>
+  vmap <leader>r :!tidy -q -i --wrap 0<CR>
 
   "Удалить всё
   "\d
@@ -344,7 +348,8 @@
 " vim-commentary
 "-----------------
   " autocmd FileType php setlocal commentstring=<?php\ /*\ %s\ */\ ?>
-  autocmd FileType php setlocal commentstring=/*\ %s\ */
+  " autocmd FileType php setlocal commentstring=/*\ %s\ */
+  autocmd FileType php setlocal commentstring=//\ %s
   autocmd FileType html.twig setlocal commentstring={#\ %s\ #}
   autocmd FileType smarty setlocal commentstring=<!--\ %s\ -->
 
@@ -378,6 +383,8 @@
   "Выделить 41 столбец символ в строке
   nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
   nnoremap <leader><F6> :match zettelIndex //<CR>
+  nnoremap <leader>ds :%s/ style="[ a-zA-ZА-Яа-я0-9:\.;-]*"//g<CR>
+  nnoremap <leader>dc :%s/ class="[ a-zA-ZА-Яа-я0-9:\.;-]*"//g<CR>
   "Yandex Direct Title
   "nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
   "Yandex Direct Subtitle
