@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <title>ЗАГОЛОВОК - ЗАГОЛОВОК - ЗАГОЛОВОК</title>
+  <meta charset='utf-8'>
+  <meta name="robots" content="noindex"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="favicon.ico" type="image/x-icon" rel="shortcut icon" >
+  <link href='style.css' rel='stylesheet' />
+</head>
+<body>
+
+  <div class="container">
+  </div>
+
+  <footer class="footer">
+  </footer>
+
+  <script src="js/common.js" ></script>
+
+</body>
+</html>
