@@ -155,7 +155,7 @@
   let &t_te.="\e[0 q"
 
   "Подсветка строки
-  "set cursorline
+  set cursorline
   "set cursorcolumn
 
   "Не обновлять экран пока выполняется макрос
@@ -253,7 +253,7 @@
   "F12 - Backup Files
   function Dobackup()
     let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ./"
+    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev-4' --exclude='gulp-dev' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ./"
     execute l:cmd
   endfunction
   nnoremap <F12> :call Dobackup()<CR>
@@ -264,24 +264,21 @@
   map <C-l> <C-w><Right>
   map <C-h> <C-w><Left>
 
-  " Назначаем клавишу лидер на запятую
-  " let mapleader = ","
-
   "Выровнять
   "nmap <leader>r :normal =at<cr>
   "Выровнять html - Tidy html
   "vmap <leader>r :!tidy -q -i --wrap 0 --show-errors 0<CR>
-  vmap <leader>r :!tidy -q -i --wrap 0<CR>
+  vmap <leader>r :!tidy -q -i --wrap 0 --show-errors 0<CR>
 
   "Удалить всё
   "\d
   nnoremap <leader>dd :%d<CR>
 
   "Удалить атрибут style=""
-  nnoremap <leader>ds :%s/\s*style="[a-zA-Z-: 0-9.;#%',]*"//g<CR>
+  nnoremap <leader>ds:%s/\s*style="[a-zA-Z-: 0-9.;#%',]*"//g<CR>
 
   "Удалить атрибут class=""
-  nnoremap <leader>dc :%s/\s*class="[a-zA-Z-_ 0-9]*"//g<CR>
+  nnoremap <leader>dc:%s/*class="[a-zA-Z-_ 0-9]*"//g<CR>
 
   "Сохранить и удалить буфер
   "\x
@@ -318,6 +315,7 @@
   nnoremap <leader>sp :set syntax=php<CR>
   nnoremap <leader>st :set filetype=twig<CR>
   nnoremap <leader>sc :set syntax=css<CR>
+  vnoremap <leader>" :s/"/'/g<CR>  :noh<CR>
 
 "-------------------------
 " Аббревиатуры для примера
@@ -383,8 +381,8 @@
   "Выделить 41 столбец символ в строке
   nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
   nnoremap <leader><F6> :match zettelIndex //<CR>
-  nnoremap <leader>ds :%s/ style="[ a-zA-ZА-Яа-я0-9:\.;-]*"//g<CR>
-  nnoremap <leader>dc :%s/ class="[ a-zA-ZА-Яа-я0-9:\.;-]*"//g<CR>
+  nnoremap <leader>ds :%s/ style="[ a-zA-ZА-Яа-я0-9:\.;#-]*"//g<CR>
+  nnoremap <leader>dc :%s/ class="[ a-zA-ZА-Яа-я0-9:\.;#-]*"//g<CR>
   "Yandex Direct Title
   "nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
   "Yandex Direct Subtitle
@@ -422,10 +420,103 @@
   "Разбиение строки
   "g/\%>60v/norm gww
   
-  "todo - что нужно сделать
-  "В файлах .md выделяется красным знак подчёркивания _ - нужно исправить
-  "Исправил
-  "
-  "
   let g:github_user = "ishutin-pavel"
   let g:gist_token = "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"
+
+
+function! GenerateLatinCssBlocks(root) " Принимает аргумент root
+    " Латинские окончания
+    let endings = [
+        \ 'us', 'um', 'a', 'ae', 'i', 'is', 'o', 'os',
+        \ 'or', 'ix', 'ex', 'ax', 'ux', 'es', 'as',
+        \ 'is', 'ys', 'on', 'en', 'ar', 'er', 'ur',
+        \ 'or', 'os', 'al', 'el', 'il', 'ol', 'ul',
+        \ 'ium', 'eus', 'ius', 'eus', 'aris', 'aris',
+        \ 'itas', 'icus', 'idus', 'ilis', 'ivus'
+    \]
+
+    " Префиксы (i, d, t или без префикса)
+    let prefixes = ['', 'i', 'd', 't']
+
+    " Генерируем все варианты
+    let variants = []
+    for prefix in prefixes
+        for ending in endings
+            if prefix == ''
+                call add(variants, a:root . ending)
+            else
+                call add(variants, a:root . prefix . ending)
+            endif
+        endfor
+    endfor
+
+    " Вставляем под текущей строкой
+    call append(line('.'), variants)
+endfunction
+
+" Команда с аргументом (корнем)
+command! -nargs=1 Name call GenerateLatinCssBlocks(<q-args>)
+
+
+function! GenerateBEMBlocks(root) " Принимает аргумент root
+    " Латинские окончания
+    let endings = [
+        \ 'us', 'um', 'a', 'ae', 'i', 'is', 'o', 'os',
+        \ 'or', 'ix', 'ex', 'ax', 'ux', 'es', 'as',
+        \ 'is', 'ys', 'on', 'en', 'ar', 'er', 'ur',
+        \ 'or', 'os', 'al', 'el', 'il', 'ol', 'ul',
+        \ 'ium', 'eus', 'ius', 'eus', 'aris', 'aris',
+        \ 'itas', 'icus', 'idus', 'ilis', 'ivus'
+    \]
+
+    " Префиксы (i, d, t или без префикса)
+    let prefixes = ['', 'i', 'd', 't']
+
+    " Генерируем все варианты
+    let variants = []
+    for ending in endings
+        if prefix == ''
+            call add(variants, a:root . ending)
+        else
+            call add(variants, a:root . prefix . ending)
+        endif
+    endfor
+
+    " Вставляем под текущей строкой
+    call append(line('.'), variants)
+endfunction
+
+" Команда с аргументом (корнем)
+command! -nargs=1 Bem call GenerateBEMBlocks(<q-args>)
+
+function! GenerateBemElements(block) abort
+    " Список часто используемых БЭМ-элементов
+    let elements = [ 'section', 'wrap', 'row row_a', 'col col_a', 'group', 'content', 'inner', 'bg', 'overlay', 'item', 'img-wrap', 'img', 'title', 'subtitle', 'desc', 'btn-wrap', 'btn', 'text', 'icon', 'link', 'list', 'info', 'aside', 'main', 'body', 'head', 'header', 'foot', 'footer', 'menu', 'nav', 'tab', 'panel', 'form', 'field', 'label', 'input', 'control', 'meta' ]
+
+    " Генерируем элементы в формате БЭМ
+    let bem_elements = []
+    for element in elements
+        if element == 'img'
+            call add(bem_elements, '<img class="' . a:block . '__' . element . '">')
+        elseif element == 'input'
+            call add(bem_elements, '<input class="' . a:block . '__' . element . '" type="text">')
+        else
+            call add(bem_elements, '<div class="' . a:block . '__' . element . '"></div>')
+        endif
+    endfor
+
+    " Вставляем под текущей строкой
+    call append(line('.'), bem_elements)
+endfunction
+
+" Команда для вызова с аргументом (названием блока)
+command! -nargs=1 Bem call GenerateBemElements(<q-args>)
+
+function! Blocks()
+    " Определяем список корней
+    let blocks = 'about advant b1 banner begin begin brand btn calc case cat city content cta dialog faq form galler geo icon itd job manager map menu numb oborud order partner person popup post price product promo quiz review sale serv servis slid smb start step tag testimonial text title top uslug video'
+    " Вставляем варианты под текущей строкой
+    call append(line('.'), blocks)
+endfunction
+" Создаем команду для удобного вызова
+command! Blocks call Blocks()
