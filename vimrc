@@ -58,6 +58,12 @@
   filetype plugin on
 
 "-------------------------
+" Включить загрузку локального .vimrc из текущей папки
+"-------------------------
+  set exrc      " Разрешить локальный .vimrc
+  set secure    " Включить безопасный режим
+
+"-------------------------
 " Автосохранение отключить
 "-------------------------
 
@@ -139,6 +145,9 @@
 " Другие параметры
 "-----------------
 
+  " добавить к текущему списку символов слова тире -
+  set iskeyword+=-
+
   "Показать незавершенные команды
   set showcmd
 
@@ -162,9 +171,10 @@
   set lazyredraw
 
   "Определение расширения файла для команды gf
-  set suffixesadd+=.php
-  set suffixesadd+=.js
-  set suffixesadd+=.css
+  set suffixesadd+=.html
+  "set suffixesadd+=.php
+  "set suffixesadd+=.js
+  "set suffixesadd+=.css
   set suffixesadd+=.scss
   set suffixesadd+=.md
 
@@ -176,6 +186,9 @@
   "для использование команд H M L
   set scrolloff=0
 
+  " Игнорировать пробелы, использовать гистограммный алгоритм, показывать 3 строки контекста
+  set diffopt=filler,iwhite,algorithm:histogram,context:3
+
 "------------
 " Status Line
 "------------
@@ -184,15 +197,14 @@
   set laststatus=2
 
   set statusline=
-  set statusline+=\ %F                                        "полный путь к файлу
-  set statusline+=%=%5l                                       "номер текущей строки
-  set statusline+=%m\                                         "модификатор
-  set statusline+=%=                                          "разделитель между левой и правой частью
-  set statusline+=\ %y                                        "тип файла
-  set statusline+=\ %{&fileencoding?&fileencoding:&encoding}  "кодировка
-  set statusline+=\ [%{&fileformat}\]                         "формат end-of-line
-  set statusline+=%=%5l                                       "номер текущей строки
-  set statusline+=/%L\                                        "всего строк
+  set statusline+=\ %F                                        " полный путь к файлу
+  set statusline+=%m\                                         " модификатор
+  set statusline+=%=                                          " разделитель между левой и правой частью
+  set statusline+=\ %y                                        " тип файла
+  set statusline+=\ %{&fileencoding?&fileencoding:&encoding}  " кодировка
+  set statusline+=\ [%{&fileformat}\]                         " формат end-of-line
+  set statusline+=%=%5l                                       " номер текущей строки
+  set statusline+=/%L\                                        " всего строк
 
 "------------------
 " Файловый менеджер
@@ -204,56 +216,69 @@
 " Горячие клавиши
 "----------------
 
-    "F11 - Backup Database
-    function Dodump()
-      " let l:db_host = "localhost"
-      " let l:db_name = "wordpress"
-      " let l:db_user = "root"
-      " let l:db_pass = ""
+  " F11 - Backup Database
+  function! Dodump()
       let l:dump_name = "backup_" . strftime("%Y%m%d_%H%M") . ".sql"
+      let l:config_file = 'wp-config.php'
+      
+      if !filereadable(l:config_file)
+          echohl ErrorMsg
+          echom "Error: wp-config.php not found!"
+          echohl None
+          return
+      endif
 
-    let l:lines = readfile('wp-config.php')
-    for l:line in l:lines
-      if (l:line =~ "define( 'DB_NAME', '")
-        let ipa = l:line
-        let ips = substitute(ipa, "define( 'DB_NAME', '", "", "g")
-        let ipe = substitute(ips, "' );", "", "g")
-        let l:db_name = ipe
-      endif
-      if (l:line =~ "define( 'DB_USER', '")
-        let ipa = l:line
-        let ips = substitute(ipa, "define( 'DB_USER', '", "", "g")
-        let ipe = substitute(ips, "' );", "", "g")
-        let l:db_user = ipe
-      endif
-      if (l:line =~ "define( 'DB_PASSWORD', '")
-        let ipa = l:line
-        let ips = substitute(ipa, "define( 'DB_PASSWORD', '", "", "g")
-        let ipe = substitute(ips, "' );", "", "g")
-        let l:db_pass = ipe
-      endif
-      if (l:line =~ "define( 'DB_HOST', '")
-        let ipa = l:line
-        let ips = substitute(ipa, "define( 'DB_HOST', '", "", "g")
-        let ipe = substitute(ips, "' );", "", "g")
-        let l:db_host = ipe
-      endif
-    endfor
+      " Initialize variables with default values
+      let l:db_host = 'localhost'
+      let l:db_name = ''
+      let l:db_user = ''
+      let l:db_pass = ''
 
-    if l:db_pass == ""
-      let l:cmd = "!mysqldump -h ". l:db_host ." -u ".l:db_user." " . l:db_name . " > ./" . l:dump_name
-    else
-      let l:cmd = "!mysqldump -h " .l:db_host ." -u ".l:db_user." -p".l:db_pass ." " .  l:db_name . " > ./" . l:dump_name
-    endif
-    execute echo l:db_name
-    execute l:cmd
+      " More efficient parsing of wp-config.php
+      for l:line in readfile(l:config_file)
+          if l:line =~ 'define(\s*''DB_'
+              let l:parts = split(l:line, "'")
+              if len(l:parts) >= 5
+                  if l:line =~ 'DB_NAME'
+                      let l:db_name = l:parts[3]
+                  elseif l:line =~ 'DB_USER'
+                      let l:db_user = l:parts[3]
+                  elseif l:line =~ 'DB_PASSWORD'
+                      let l:db_pass = l:parts[3]
+                  elseif l:line =~ 'DB_HOST'
+                      let l:db_host = l:parts[3]
+                  endif
+              endif
+          endif
+      endfor
+
+      " Validate required values
+      if empty(l:db_name) || empty(l:db_user)
+          echohl ErrorMsg
+          echom "Error: Could not find database credentials in wp-config.php"
+          echohl None
+          return
+      endif
+
+      " Build mysqldump command safely
+      let l:cmd = '!mysqldump -h ' . shellescape(l:db_host) .
+                \ ' -u ' . shellescape(l:db_user) .
+                \ (empty(l:db_pass) ? '' : ' -p' . shellescape(l:db_pass)) .
+                \ ' ' . shellescape(l:db_name) .
+                \ ' > ./' . shellescape(l:dump_name)
+
+      echo "Backing up database: " . l:db_name
+      execute l:cmd
   endfunction
-  nnoremap <F11> :call Dodump()<CR>
+
+nnoremap <F11> :call Dodump()<CR>
+
+
 
   "F12 - Backup Files
   function Dobackup()
     let l:backup_name = "backup_" . strftime("%Y%m%d_%H%M") . ".tar.gz"
-    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev-4' --exclude='gulp-dev' --exclude='node_modules' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ./"
+    let l:cmd = "!tar --exclude='documentation' --exclude='replace-to-local.sh' --exclude='replace-to-hosting.sh' --exclude='*.zip' --exclude='*.psd' --exclude='tags' --exclude='gulp-dev-4' --exclude='gulp-dev' --exclude='gulp' --exclude='.git' --exclude='*.tar.gz' -cvzf ". l:backup_name ." ./"
     execute l:cmd
   endfunction
   nnoremap <F12> :call Dobackup()<CR>
@@ -306,7 +331,7 @@
 "----------------
 " Синтаксис
 "----------------
-  "Изменить подсветку синтаксиса
+
   "\h - html
   "\p - php
   "\t - twig
@@ -364,9 +389,9 @@
   "http://www.calmar.ws/vim/256-xterm-24bit-rgb-color-chart.html
   hi markdownH1 ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownH2 ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  hi markdownH3 ctermfg=227 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  hi markdownH4 ctermfg=47 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
-  hi markdownH5 ctermfg=166 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH3 ctermfg=118 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH4 ctermfg=220 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
+  hi markdownH5 ctermfg=208 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownH6 ctermfg=99 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownHeadingDelimiter ctermfg=197 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
   hi markdownUrlDelimiter ctermfg=117 ctermbg=NONE cterm=NONE guifg=NONE guibg=NONE gui=NONE
@@ -381,7 +406,7 @@
   "Выделить 41 столбец символ в строке
   nnoremap <F6> :match zettelIndex /\%<41v.\%>40v/<CR>
   nnoremap <leader><F6> :match zettelIndex //<CR>
-  nnoremap <leader>ds :%s/ style="[ a-zA-ZА-Яа-я0-9:\.;#-]*"//g<CR>
+  nnoremap <leader>ds :%s/ style="[ a-zA-ZА-Яа-я0-9:,\.;#-]*"//g<CR>
   nnoremap <leader>dc :%s/ class="[ a-zA-ZА-Яа-я0-9:\.;#-]*"//g<CR>
   "Yandex Direct Title
   "nnoremap <leader>ydt :match zettelIndex /\%<56v.\%>55v/<CR>
@@ -427,16 +452,15 @@
 function! GenerateLatinCssBlocks(root) " Принимает аргумент root
     " Латинские окончания
     let endings = [
-        \ 'us', 'um', 'a', 'ae', 'i', 'is', 'o', 'os',
+        \ 'us', 'um', 'ae', 'is', 'os', 'ox',
         \ 'or', 'ix', 'ex', 'ax', 'ux', 'es', 'as',
         \ 'is', 'ys', 'on', 'en', 'ar', 'er', 'ur',
-        \ 'or', 'os', 'al', 'el', 'il', 'ol', 'ul',
-        \ 'ium', 'eus', 'ius', 'eus', 'aris', 'aris',
-        \ 'itas', 'icus', 'idus', 'ilis', 'ivus'
+        \ 'or', 'os', 'al', 'el', 'il', 'ol', 'ul'
     \]
 
     " Префиксы (i, d, t или без префикса)
-    let prefixes = ['', 'i', 'd', 't']
+    " let prefixes = ['', 'i', 'd', 't']
+    let prefixes = ['']
 
     " Генерируем все варианты
     let variants = []
@@ -456,38 +480,6 @@ endfunction
 
 " Команда с аргументом (корнем)
 command! -nargs=1 Name call GenerateLatinCssBlocks(<q-args>)
-
-
-function! GenerateBEMBlocks(root) " Принимает аргумент root
-    " Латинские окончания
-    let endings = [
-        \ 'us', 'um', 'a', 'ae', 'i', 'is', 'o', 'os',
-        \ 'or', 'ix', 'ex', 'ax', 'ux', 'es', 'as',
-        \ 'is', 'ys', 'on', 'en', 'ar', 'er', 'ur',
-        \ 'or', 'os', 'al', 'el', 'il', 'ol', 'ul',
-        \ 'ium', 'eus', 'ius', 'eus', 'aris', 'aris',
-        \ 'itas', 'icus', 'idus', 'ilis', 'ivus'
-    \]
-
-    " Префиксы (i, d, t или без префикса)
-    let prefixes = ['', 'i', 'd', 't']
-
-    " Генерируем все варианты
-    let variants = []
-    for ending in endings
-        if prefix == ''
-            call add(variants, a:root . ending)
-        else
-            call add(variants, a:root . prefix . ending)
-        endif
-    endfor
-
-    " Вставляем под текущей строкой
-    call append(line('.'), variants)
-endfunction
-
-" Команда с аргументом (корнем)
-command! -nargs=1 Bem call GenerateBEMBlocks(<q-args>)
 
 function! GenerateBemElements(block) abort
     " Список часто используемых БЭМ-элементов
@@ -520,3 +512,35 @@ function! Blocks()
 endfunction
 " Создаем команду для удобного вызова
 command! Blocks call Blocks()
+
+
+" Функция для красивого бинарного вывода
+function! BinaryView()
+    let l:tmpfile = tempname()
+    silent execute '%!xxd -b' 
+    if v:shell_error
+        " Если xxd -b не работает, используем python
+        silent execute '%!python3 -c "import sys
+\ data = sys.stdin.buffer.read()
+\ offset = 0
+\ while offset < len(data):
+\     chunk = data[offset:offset+6]
+\     hex_bytes = ''.join(f''{b:02x} '' for b in chunk)
+\     bin_bytes = ''.join(f''{b:08b} '' for b in chunk)
+\     ascii_bytes = ''.join(chr(b) if 32 <= b < 127 else ''.'' for b in chunk)
+\     print(f''{offset:08x}: {hex_bytes:24} {bin_bytes:54}  {ascii_bytes}'')
+\     offset += len(chunk)"'
+    endif
+endfunction
+
+command! Binary call BinaryView()
+
+autocmd FileType markdown setlocal tabstop=2
+autocmd FileType markdown setlocal shiftwidth=2
+
+" Markdown to HTML
+nnoremap <leader>mh :%!pandoc -f markdown -t html --wrap=none<CR>
+" Pandoc по умолчанию использует --wrap=auto, который добавляет переносы строк на определенной длине (обычно 72 символа) для удобочитаемости HTML. Это и создает нежелательные переносы внутри текста абзацев.
+
+" HTML to Markdown
+nnoremap <leader>hm :%!pandoc -f html -t markdown<CR>
